@@ -159,7 +159,14 @@ def do_download(args):
 				mc_song.get('clientId'): mc_song
 				for mc_song in mc_songs
 			}
-			local_client_ids = {generate_client_id(song) for song in local_songs}
+			local_client_ids = set()
+			for song in local_songs:
+				try:
+					local_client_ids.add(generate_client_id(song))
+				except Exception as e:
+					logger.warn("Failed to get client ID for {}".format(song))
+					raise e
+
 			for client_id, mc_song in google_client_id_map.items():
 				song = first_true(
 					(song for song in google_songs),
