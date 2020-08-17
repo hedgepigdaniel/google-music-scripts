@@ -180,6 +180,7 @@ def is_valid_audio_file(file_path):
 			audio_metadata.OggOpus,
 			audio_metadata.OggVorbis,
 			audio_metadata.WAVE,
+			audio_metadata.MP4,
 		]:
 			return True
 
