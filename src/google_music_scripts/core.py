@@ -172,6 +172,23 @@ def get_google_songs(client, *, filters=None):
 	return matched_songs
 
 
+def is_valid_audio_file(file_path):
+	try:
+		if audio_metadata.determine_format(file_path) in [
+			audio_metadata.FLAC,
+			audio_metadata.MP3,
+			audio_metadata.OggOpus,
+			audio_metadata.OggVorbis,
+			audio_metadata.WAVE,
+		]:
+			return True
+
+		return False
+	except Exception as e:
+		logger.warning("Failed to determine format for {}".format(file_path))
+		raise e
+
+
 def get_local_songs(
 	paths,
 	*,
@@ -192,13 +209,7 @@ def get_local_songs(
 			exclude_regexes=exclude_regexes,
 			exclude_globs=exclude_globs
 		)
-		if audio_metadata.determine_format(filepath) in [
-			audio_metadata.FLAC,
-			audio_metadata.MP3,
-			audio_metadata.OggOpus,
-			audio_metadata.OggVorbis,
-			audio_metadata.WAVE,
-		]
+		if is_valid_audio_file(filepath)
 	]
 
 	logger.info("Found {} local songs", len(local_songs))
